@@ -1,0 +1,55 @@
+
+# Tomcat
+server:
+   port: 8989
+
+spring:
+  # 配置数据源
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      driver-class-name: org.postgresql.Driver
+      url: jdbc:postgresql://localhost:5432/db_test1
+      #url: jdbc:postgresql://localhost:5432/db_test1?serverTimezone=UTC&useSSL=false
+      username: postgres
+      password: root
+    ###################以下为druid增加的配置###########################
+    # 下面为连接池的补充设置，应用到上面所有数据源中
+    # 初始化大小，最小，最大
+      initial-size: 5   # 连接池初始化连接数量
+      min-idle: 5      # 连接池最小空闲数
+      max-active: 20    # 连接池最大活跃连接数
+      max-wait: 60000    # 配置获取连接等待超时的时间
+      time-between-eviction-runs-millis: 60000       # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      min-evictable-idle-time-millis: 300000         # 配置一个连接在池中最小生存的时间，单位是毫秒
+      validation-query: SELECT 1 FROM DUAL           # 连接是否有效的查询语句
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      pool-prepared-statements: true                 # 打开PSCache，并且指定每个连接上PSCache的大小
+      max-pool-prepared-statement-per-connection-size: 20
+      filter:
+        commons-log:
+          connection-logger-name: stat,wall,log4j    # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，【 'stat':监控统计  'wall'：用于防火墙，防御sql注入
+          statement-executable-sql-log-enable: true # 表示是否显示SQL语句
+      connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000         # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+      use-global-data-source-stat: true      # 合并多个DruidDataSource的监控数据
+      db-type: postgresql
+
+
+
+
+
+#mybatis-plus
+mybatis-plus:
+  mapper-locations: classpath*:**/mapper/xml/*.xml  #xml所在位置  不设置默认是在mapper类同级
+  configuration:
+    mapUnderscoreToCamelCase: true  # 开启驼峰匹配  默认为true
+    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # 打印sql语句和入参数据
+#global-config:
+      # db-config:
+       #logic-delete-value: 1 #逻辑删除  配合@TableLogic注解
+       #logic-not-delete-value: 0 #逻辑不删除
+       #update-strategy: not_null # 更新时字段如果为null，就不进行更新该字段。
+        #insert-strategy: not_null # 插入时如果字段为null,就不插入数据，建议数据库表字段设置默认值
+

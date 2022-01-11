@@ -1,0 +1,34 @@
+# Tomcat
+server:
+  port: 8989
+
+spring:
+  profiles:
+    active: dev #开发环境
+  ############################# 多数据源配置##############################
+  ## 去除druid配置。是否需要，根据druid连接池的类型。如果druid连接池为starter类型，则需要排除。否则，不需要。
+  autoconfigure:
+     exclude: com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure
+  ###################以下为druid数据源共有增加的配置###########################
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      db-type: postgresql
+      # 下面为连接池的补充设置，应用到上面所有数据源中
+      # 初始化大小，最小，最大
+      initial-size: 5   # 连接池初始化连接数量
+      min-idle: 5      # 连接池最小空闲数
+      max-active: 20    # 连接池最大活跃连接数
+      pool-prepared-statements: true #是否缓存preparedStatement,mysql5.5+建议开启
+      max-pool-prepared-statement-per-connection-size: 20 #当值大于20时poolPreparedStatements会自动修改为true
+      #通过connectProperties属性来打开mergeSql功能；慢SQL记录
+      connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+      use-global-data-source-stat: true #合并多个DruidDataSource的监控数据
+        #filters通过别名的方式配置扩展插件，常用的插件有：
+        #监控统计用的filter:stat 日志用的filter:log4j 防御sql注入的filter:wall
+      #filters: stat,wall,log4j
+      filters: stat,log4j
+
+
+
+

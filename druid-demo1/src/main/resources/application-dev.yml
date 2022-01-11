@@ -1,0 +1,58 @@
+  #application-dev.yml配置文件。主要配置多数据源信息和mybatis-plus的日志打印
+spring:
+  datasource:
+    dynamic:
+      primary: master #设置默认的数据源或者数据源组,默认值即为master
+      strict: false #设置严格模式,默认false不启动. 启动后在未匹配到指定数据源时候会抛出异常,不启动则在未匹配到指定数据源时候使用默认数据源.
+      datasource:
+        master:
+          #url: jdbc:postgresql://localhost:5432/db_test1
+          #driver-class-name: org.postgresql.Driver
+          #p6spy SQL性能分析插件
+          driverClassName: com.p6spy.engine.spy.P6SpyDriver
+          url: jdbc:p6spy:postgresql://localhost:5432/db_test1?useUnicode=true&characterEncoding=utf8
+          username: postgres
+          password: root
+  ##################使用p6spy插件时，由于使用dynamic动态数据源，且分成了两个配置文件（一个配置文件情况下公共配置不会报错）#####################################################
+  ##################必须在每个数据源下去掉对wall的过滤,否则出现dbtype=null错误#####################################################
+          druid:
+            filters: stat,log4j
+            #filters: stat,wall,log4j
+
+        slave:
+          #url: jdbc:postgresql://localhost:5432/db_test1
+          #driver-class-name: org.postgresql.Driver
+          #p6spy SQL性能分析插件
+          driver-class-name: com.p6spy.engine.spy.P6SpyDriver
+          url: jdbc:p6spy:postgresql://localhost:5432/db_test2
+          username: postgres
+          password: root
+          druid:
+            filters: stat,log4j
+
+
+
+
+
+  # 配置sql打印日志，开发环境需要，生产环境一般不需要
+#mybatis-plus
+mybatis-plus:
+  mapper-locations: classpath*:**/mapper/xml/*.xml  #xml所在位置  不设置默认是在mapper类同级
+  type-aliases-package: com.lzy.pojo
+  configuration:
+    mapUnderscoreToCamelCase: true  # 开启驼峰匹配  默认为true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 打印sql语句和入参数据
+      #global-config:
+      # db-config:
+      #logic-delete-value: 1 #逻辑删除  配合@TableLogic注解
+      #logic-not-delete-value: 0 #逻辑不删除
+    #update-strategy: not_null # 更新时字段如果为null，就不进行更新该字段。
+    #insert-strategy: not_null # 插入时如果字段为null,就不插入数据，建议数据库表字段设置默认值
+
+  global-config:
+    db-config:
+      logic-not-delete-value: 1
+      #逻辑删除配置
+      logic-delete-value: 0
+      #数据库大写下划线转换
+      capital-mode: true

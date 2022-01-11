@@ -1,0 +1,28 @@
+package com.lzy.service;
+
+import com.github.pagehelper.PageInfo;
+import com.lzy.pojo.Book;
+
+import java.util.List;
+
+public interface BookService {
+    //查
+    List<Book> selectAll();
+
+    Book findById(Long id);
+
+    //增
+    //int insert(User user);
+    int insertSelective(Book book);
+    //批量插入和批量查询及批量插入都不能用，因为 dao 层的 mapper 接口还要继承 MySqlMapper
+
+    int updateByPrimaryKey(Book book);
+
+    //删--先删再调用查所有
+    int delete(Long id);
+
+
+    //分页--利用分页插件
+    //pageNum表示当前页，pageSize表示每页的数量
+    PageInfo<Book> getUsersByPage(Integer pageNum, Integer pageSize);
+}

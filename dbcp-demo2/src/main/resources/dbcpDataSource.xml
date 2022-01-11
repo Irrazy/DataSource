@@ -1,0 +1,29 @@
+<beans
+        xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- dbcpDataSource数据源配置 -->
+    <!--导入属性文件-->
+    <context:property-placeholder location="dbcp.properties"></context:property-placeholder>
+    <bean id="dataSource"
+          class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driverClassName}" > </property>
+        <property name="url" value="${jdbc.url}"> </property>
+        <property name="username" value="${jdbc.username}" > </property>
+        <property name="password" value="${jdbc.password}"> </property>
+    </bean>
+
+    <!-- property是bean元素的子元素，它用于调用Bean实例中的setter方法用于完成属性赋值，
+    从而实现依赖注入。其name属性表示Bean实例中的相应属性，ref属性用于指定其属性值（就是你要连接的bean的id）-->
+
+    <!-- 定义一个dbcpDAOImpl bean -->
+    <bean id="dbcpDAOImpl" class="Impl.dbcpDAOImpl">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+
+
+</beans>
